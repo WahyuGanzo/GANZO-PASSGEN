@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GANZO PASSGEN</title>
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="shortcut icon" href="icon.png" type="image/x-icon">
+  <style>
+    body {
+      font-family: 'Baloo 2', cursive;
+      background-image: url('1333794.jpeg');
+      background-size: cover;
+      background-position: center;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4">
+  <div class="backdrop-blur-xl bg-white/10 border border-white/30 rounded-2xl shadow-2xl p-8 w-full max-w-xl">
+    <h1 class="text-3xl font-bold text-white mb-6 text-center">GANZO PASSGEN</h1>
+
+    <div class="mb-4">
+      <label class="block text-white mb-1">Masukkan kata utama:</label>
+      <input id="baseText" type="text" class="w-full p-2 rounded bg-white/20 text-white placeholder-white/70" placeholder="Contoh: ganzo" />
+    </div>
+
+    <div class="mb-4 space-y-2">
+      <label class="flex items-center space-x-2 text-white">
+        <input type="checkbox" id="addNumber" class="accent-white" />
+        <span>Tambah angka acak</span>
+      </label>
+      <label class="flex items-center space-x-2 text-white">
+        <input type="checkbox" id="capitalize" class="accent-white" />
+        <span>Gunakan huruf besar-kecil</span>
+      </label>
+      <label class="flex items-center space-x-2 text-white">
+        <input type="checkbox" id="addSymbols" class="accent-white" />
+        <span>Tambah simbol (!@#$%)</span>
+      </label>
+      <label class="flex items-center space-x-2 text-white">
+        <input type="checkbox" id="addRandomWord" class="accent-white" />
+        <span>Tambah kata acak</span>
+      </label>
+    </div>
+
+    <div class="mb-4">
+      <label class="block text-white mb-1">Jumlah password yang dihasilkan:</label>
+      <input id="quantity" type="number" min="1" max="50" value="5" class="w-full p-2 rounded bg-white/20 text-white placeholder-white/70" />
+    </div>
+
+    <button onclick="generatePassword()" class="bg-white text-black font-bold px-4 py-2 rounded hover:bg-gray-200 mb-4 w-full">Generate Password</button>
+
+    <div class="mb-4">
+      <label class="block text-white mb-1">Hasil:</label>
+      <textarea id="result" rows="10" class="w-full p-2 rounded bg-white/20 text-white placeholder-white/70" readonly></textarea>
+    </div>
+
+    <div class="flex space-x-4">
+      <button onclick="copyToClipboard()" class="flex-1 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Copy All</button>
+      <button onclick="downloadAsTxt()" class="flex-1 bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">Download .txt</button>
+    </div>
+
+    <p class="text-white text-center text-xs mt-6">&copy; 2025 by <a href="https://ganzostudio.xyz" target="_blank" class="underline">Ganzo Studio</a></p>
+  </div>
+
+  <script>
+    function generatePassword() {
+      const base = document.getElementById('baseText').value;
+      const addNumber = document.getElementById('addNumber').checked;
+      const capitalize = document.getElementById('capitalize').checked;
+      const addSymbols = document.getElementById('addSymbols').checked;
+      const addRandomWord = document.getElementById('addRandomWord').checked;
+      const quantity = parseInt(document.getElementById('quantity').value);
+
+      const randomWords = [
+  "cat", "dog", "sun", "moon", "code", "dark", "light", "fire", "byte", "star",
+  "tree", "wolf", "sky", "rock", "wind", "rain", "snow", "ice", "dust", "lava",
+  "frog", "lion", "tide", "echo", "void", "chip", "node", "bug", "nest", "cloud",
+  "beam", "nova", "wave", "glow", "core", "drum", "gear", "tank", "hawk", "orb",
+  "ray", "seed", "path", "ring", "mint", "flux", "warp", "loop", "dash", "ping",
+  "crab", "bear", "salt", "root", "grid", "lens", "hive", "drip", "poke", "bash",
+  "repo", "sync", "zinc", "link", "pick", "drag", "drop", "clip", "flip", "snap",
+  "hook", "mode", "disk", "zone", "peek", "plot", "soul", "myth", "fizz", "brew",
+  "stem", "dusk", "rise", "bolt", "grim", "twin", "fury", "zeal", "tomb", "jinx",
+  "mist", "luck", "aura", "rune", "push", "bash", "fade", "grow", "leaf", "blip",
+  "mint", "gear", "maze", "risk", "trap", "fade", "drip", "glow", "shine", "rift",
+  "claw", "grip", "slam", "roar", "howl", "chirp", "buzz", "blow", "zing", "snap",
+  "flux", "crux", "curl", "blur", "bash", "perk", "skip", "lurk", "kick", "bash",
+  "jolt", "zap", "grim", "brim", "whip", "stab", "gnaw", "chew", "yarn", "loom",
+  "bash", "coil", "soar", "dash", "rush", "peep", "hoot", "chirp", "peck", "nest",
+  "slug", "snug", "grin", "wink", "glee", "smug", "blur", "vibe", "quiz", "zing",
+  "clap", "buzz", "bash", "cram", "slam", "grip", "flap", "jazz", "whiz", "wink",
+  "dive", "glow", "sink", "swim", "surf", "gush", "drop", "drip", "ooze", "blur",
+  "soot", "hush", "muse", "wisp", "veil", "rift", "chop", "numb", "bash", "ting",
+  "brag", "bump", "tune", "ring", "ping", "pong", "wham", "zap", "zing", "tick",
+  "tock", "beep", "boop", "bang", "slam", "snap", "buzz", "fizz", "crash", "smash",
+  "foam", "bark", "meow", "chirp", "neon", "byte", "node", "loop", "heap", "boot",
+  "bash", "lint", "gist", "repo", "fork", "push", "pull", "test", "mock", "prod",
+  "main", "dev", "log", "read", "scan", "grep", "ping", "auth", "sync", "host"
+];
+
+      const symbols = '!@#$%^&*';
+      let results = [];
+
+      for (let i = 0; i < quantity; i++) {
+        let pwd = base;
+
+        if (capitalize) {
+          pwd = pwd.split('').map((c, i) => i % 2 === 0 ? c.toUpperCase() : c.toLowerCase()).join('');
+        }
+
+        if (addRandomWord) {
+          const randWord = randomWords[Math.floor(Math.random() * randomWords.length)];
+          pwd += randWord;
+        }
+
+        if (addNumber) {
+          pwd += Math.floor(Math.random() * 10000);
+        }
+
+        if (addSymbols) {
+          for (let j = 0; j < 3; j++) {
+            pwd += symbols.charAt(Math.floor(Math.random() * symbols.length));
+          }
+        }
+
+        results.push(pwd);
+      }
+
+      document.getElementById('result').value = results.join('\n');
+    }
+
+    function copyToClipboard() {
+      const result = document.getElementById('result');
+      result.select();
+      document.execCommand('copy');
+      alert('Semua password berhasil disalin!');
+    }
+
+    function downloadAsTxt() {
+      const text = document.getElementById('result').value;
+      const blob = new Blob([text], { type: 'text/plain' });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = 'ganzo-passwords.txt';
+      link.click();
+    }
+  </script>
+</body>
+</html>
